@@ -1,5 +1,6 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Post, Body } from '@nestjs/common';
 import { AppService } from './app.service';
+import { FirebaseService } from './firebase.service';
 
 const page1 = {
   hasNext: true,
@@ -385,8 +386,11 @@ const page2 = {
               price: 100
             },  
           ]}
+
 @Controller()
 export class AppController {
+
+  constructor(private readonly firebaseService: FirebaseService) {}
 
   @Get()
   getBooks(@Query() query) {
@@ -396,5 +400,12 @@ export class AppController {
     if (query.page === "4") return page4
     if (query.page === "5") return page5
     if (query.page === "6") return page6
+  }
+
+
+
+  @Post('change')
+  async saveData(): Promise<void> {
+    await this.firebaseService.changeData();
   }
 }
